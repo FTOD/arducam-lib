@@ -1,8 +1,13 @@
 #include <Arduino.h>
+#include "config_format.h"
 class Cam
 {
 public:
-    Cam();
+    Cam(int cs) : CS(cs){};
+
+    void setup();
+    void configure_and_init();
+    void apply_config(const struct reg_config config[]);
 
     // Useful constants to mark return value
     // const int OK = 0;
@@ -10,11 +15,26 @@ public:
 
     // Camera related constants
     const byte SENSOR_ADDR = 0x60;
+    const byte OV2640_CHIPID_HIGH = 0x0A;
+    const byte OV2640_CHIPID_LOW = 0x0B;
 
 private:
-    // Camera related controls are on the I2C bus
-    uint8_t i2cWr8(uint16_t addr, uint8_t data);
-    uint8_t i2cWr16(uint16_t addr, uint16_t data);
-    uint8_t i2cRd8(uint16_t addr, uint8_t *data);
-    uint8_t i2cRd16(uint16_t addr, uint16_t *data);
+    // I2C read/write functions
+    uint8_t i2c8Wr8(uint8_t addr, uint8_t data);
+    uint8_t i2c8Wr16(uint8_t addr, uint16_t data);
+    uint8_t i2c8Rd8(uint8_t addr, uint8_t *data);
+    uint8_t i2c8Rd16(uint8_t addr, uint16_t *data);
+    uint8_t i2c16Wr8(uint16_t addr, uint8_t data);
+    uint8_t i2c16Wr16(uint16_t addr, uint16_t data);
+    uint8_t i2c16Rd8(uint16_t addr, uint8_t *data);
+    uint8_t i2c16Rd16(uint16_t addr, uint16_t *data);
+
+    // SPI read/write functions
+    uint8_t SPI_wr(int addr, int data);
+    uint8_t SPI_rd(int addr);
+    uint8_t SPI_reg_wr(int addr, int data);
+    uint8_t SPI_reg_rd(int addr);
+
+private:
+    int CS;
 };
