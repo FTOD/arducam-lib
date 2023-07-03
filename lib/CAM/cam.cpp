@@ -78,6 +78,7 @@ void Cam::apply_config(const struct reg_config config[])
     for (int i = 0; config[i].reg != 0xff || config[i].val != 0xff; i++)
     {
         i2c8Wr8(config[i].reg, config[i].val);
+        delay(1);
     }
 }
 
@@ -197,4 +198,35 @@ uint8_t Cam::SPI_reg_wr(int addr, int data)
 uint8_t Cam::SPI_reg_rd(int addr)
 {
     return SPI_rd(addr & 0x7F);
+}
+
+uint32_t Cam::read_fifo_length()
+{
+    uint32_t len1, len2, len3, length = 0;
+    len1 = SPI_rd(0x42);
+    len2 = SPI_rd(0x43);
+    len3 = SPI_rd(0x44) & 0x7f;
+    length = ((len3 << 16) | (len2 << 8) | len1) & 0x07fffff;
+    return length;
+}
+
+uint8_t Cam::read_fifo_burst()
+{
+    uint32_t len = read_fifo_length();
+    Serial.println("FOFO len = " + String(len));
+    digitalWrite(CS, LOW);
+    set_fifo_burst();
+
+    uint8_t temp = 0;
+
+    Serial.print("IMG\n");
+    while (len--)
+    {
+        temp = SPI.transfer(0x00);
+        Serial.write(temp);
+        delayMicroseconds(12);
+    }
+    Serial.print("\nEND\n");
+    digitalWrite(CS, HIGH);
+    return 0;
 }

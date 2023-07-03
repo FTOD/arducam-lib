@@ -1,13 +1,22 @@
 #include <Arduino.h>
 #include "config_format.h"
+#include <SPI.h>
 class Cam
 {
 public:
+    // only some configuration, no real setup
     Cam(int cs) : CS(cs){};
 
+    // Setup all necessary buses
     void setup();
     void configure_and_init();
     void apply_config(const struct reg_config config[]);
+    inline void flush_fifo() { SPI_reg_wr(0x04, 0x01); };
+    inline void start_capture() { SPI_reg_wr(0x04, 0x02); };
+    inline uint8_t is_capture_done() { return SPI_reg_rd(0x41) & 0x08; };
+    inline void set_fifo_burst() { SPI.transfer(0x3C); };
+    uint32_t read_fifo_length();
+    uint8_t read_fifo_burst();
 
     // Useful constants to mark return value
     // const int OK = 0;

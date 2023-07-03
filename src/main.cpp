@@ -16,8 +16,16 @@ void setup()
 void loop()
 {
   // DEBUG
-  Serial.println("123");
-  delay(1000);
+  Serial.println("LOOP");
+  cam.flush_fifo();
+  // DEBUG
+  cam.flush_fifo();
+  delay(5);
+  cam.start_capture();
+  while (!cam.is_capture_done())
+    ;
+  cam.read_fifo_burst();
+  delay(100);
   return;
 }
 
