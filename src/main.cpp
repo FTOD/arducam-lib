@@ -1,6 +1,13 @@
 #include <cam.h>
+#include <Adafruit_GFX.h>    // Core graphics library
+#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
 
 const static int CS = 7;
+
+#define TFT_RST 2
+#define TFT_DC 3
+#define TFT_CS 4
+Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 Cam cam(CS);
 
 void setup()
@@ -9,6 +16,23 @@ void setup()
   while (!Serial)
     ;
   Serial.println("Serial ready");
+
+  Serial.print(F("Hello! ST77xx TFT Test"));
+  tft.init(160, 128);
+  uint16_t time = millis();
+  tft.fillScreen(ST77XX_BLACK);
+  time = millis() - time;
+
+  Serial.println(time, DEC);
+  delay(500);
+
+  // large block of text
+  tft.fillScreen(ST77XX_BLACK);
+  delay(1000);
+
+  Serial.println("done");
+  digitalWrite(TFT_CS, HIGH);
+  delay(1000);
   cam.setup();
   cam.configure_and_init();
 }
@@ -28,54 +52,3 @@ void loop()
   delay(100);
   return;
 }
-
-// uint8_t read_fifo_burst(ArduCAM myCAM)
-// {
-//   bool is_header = false;
-//   uint8_t temp = 0, temp_last = 0;
-//   uint32_t length = 0;
-//   length = myCAM.read_fifo_length();
-//   Serial.println(length, DEC);
-//   if (length >= IMG_BUF_SIZE) // 512 kb
-//   {
-//     Serial.println(F("Data Over sized. Abort!"));
-//     return -1;
-//   }
-//   if (length == 0) // 0 kb
-//   {
-//     Serial.println(F("FIFO buffer empty. Ignoring"));
-//     return 0;
-//   }
-//   myCAM.CS_LOW();
-//   myCAM.set_fifo_burst(); // Set fifo burst mode
-//   temp = SPI.transfer(0x00);
-//   length--;
-//   int i = 0;
-//   while (length--)
-//   {
-//     temp_last = temp;
-//     temp = SPI.transfer(0x00);
-//     if (is_header == true)
-//     {
-//       img_buf[i++] = temp;
-//     }
-//     else if ((temp == 0xD8) & (temp_last == 0xFF))
-//     {
-//       is_header = true;
-//       img_buf[i++] = temp_last;
-//       img_buf[i++] = temp;
-//       Serial.println(F("Image Start Mark detected, transmission continues"));
-//     }
-//     if ((temp == 0xD9) && (temp_last == 0xFF))
-//     {
-//       Serial.println("Image End Mark detected, transimission completed");
-//       img_buf[i++] = temp_last;
-//       img_buf[i++] = temp;
-//       break;
-//     }
-//     delayMicroseconds(15);
-//   }
-//   myCAM.CS_HIGH();
-//   is_header = false;
-//   return 1;
-// }

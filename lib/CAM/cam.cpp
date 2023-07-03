@@ -7,8 +7,9 @@ void Cam::setup()
 {
     // setup SPI bus
     pinMode(CS, OUTPUT);
-    digitalWrite(CS, HIGH);
     SPI.begin();
+    digitalWrite(CS, LOW);
+    delay(100);
     while (1)
     {
         // test the SPI bus with 0x00 the test register
@@ -25,6 +26,7 @@ void Cam::setup()
             break;
         }
     }
+    digitalWrite(CS, HIGH);
 
     // setup I2C bus
     Wire.begin();
