@@ -218,9 +218,7 @@ uint8_t Cam::read_fifo_burst()
     Serial.println("FOFO len = " + String(len));
     digitalWrite(CS, LOW);
     set_fifo_burst();
-
     uint8_t temp = 0;
-
     Serial.print("IMG\n");
     while (len--)
     {
