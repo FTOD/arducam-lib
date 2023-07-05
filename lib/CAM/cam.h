@@ -16,7 +16,7 @@ public:
     inline uint8_t is_capture_done() { return SPI_reg_rd(0x41) & 0x08; };
     inline void set_fifo_burst() { SPI.transfer(0x3C); };
     uint32_t read_fifo_length();
-    uint8_t read_fifo_burst();
+    uint8_t read_fifo_burst(size_t size, uint8_t *buf);
 
     // Useful constants to mark return value
     // const int OK = 0;

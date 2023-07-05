@@ -1,6 +1,7 @@
 import serial
 import numpy as np
 from PIL import Image
+import sys
 
 ser = serial.Serial("/dev/ttyACM0",115200)
 img = bytes()
@@ -32,7 +33,7 @@ while True:
 
 
 # Convert the byte array to a numpy array of uint16
-pixels = np.frombuffer(img, dtype=np.uint16).byteswap()
+pixels = np.frombuffer(img, dtype=np.uint16)#.byteswap()
 
 # Reshape the numpy array to match the image dimensions
 pixels = pixels.reshape(height, width)
@@ -52,6 +53,10 @@ rgb_pixels = np.array([rgb565_to_rgb888(pixel) for pixel in pixels.flatten()]).r
 image = Image.fromarray(rgb_pixels, 'RGB')
 
 # save
-filename = "/tmp/gest_one.bmp"
+filename = "/tmp/gest.bmp"
+if len(sys.argv) < 2:
+    print("no filename specified, using default: /tmp/gest.bmp")
+else:
+    filename = sys.argv[1]
 print("saving image to ", filename)
 image.save(filename)

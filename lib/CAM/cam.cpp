@@ -211,22 +211,43 @@ uint32_t Cam::read_fifo_length()
     length = ((len3 << 16) | (len2 << 8) | len1) & 0x07fffff;
     return length;
 }
-
-uint8_t Cam::read_fifo_burst()
+uint8_t Cam::read_fifo_burst(size_t size, uint8_t *buf)
 {
     uint32_t len = read_fifo_length();
-    Serial.println("FOFO len = " + String(len));
+    // DEBUG
+    // Serial.println("FOFO len = " + String(len));
     digitalWrite(CS, LOW);
     set_fifo_burst();
-    uint8_t temp = 0;
-    Serial.print("IMG\n");
-    while (len--)
+    uint8_t temp0, temp1;
+    int i = 0;
+    while (len-- && i < size)
     {
-        temp = SPI.transfer(0x00);
-        Serial.write(temp);
+        temp1 = SPI.transfer(0x00);
         delayMicroseconds(12);
+        temp0 = SPI.transfer(0x00);
+        buf[i++] = temp0;
+        buf[i++] = temp1;
+        len--;
     }
-    Serial.print("\nEND\n");
     digitalWrite(CS, HIGH);
     return 0;
 }
+
+// uint8_t Cam::read_fifo_burst()
+// {
+//     uint32_t len = read_fifo_length();
+//     Serial.println("FOFO len = " + String(len));
+//     digitalWrite(CS, LOW);
+//     set_fifo_burst();
+//     uint8_t temp = 0;
+//     Serial.print("IMG\n");
+//     while (len--)
+//     {
+//         temp = SPI.transfer(0x00);
+//         Serial.write(temp);
+//         delayMicroseconds(12);
+//     }
+//     Serial.print("\nEND\n");
+//     digitalWrite(CS, HIGH);
+//     return 0;
+// }
