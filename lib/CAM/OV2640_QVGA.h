@@ -192,8 +192,12 @@ const struct reg_config OV2640_QVGA[] =
 
         // set the resolution by the actual size /4
         // 64 x 64
-        {0x5a, 0x10},
-        {0x5b, 0x10},
+        // {0x5a, 0x10},
+        // {0x5b, 0x10},
+
+        // 40 x 40
+        {0x5a, 0x0A},
+        {0x5b, 0x0A},
 
         // 120x160
         // {0x5a, 0x28},
