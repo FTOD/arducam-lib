@@ -89,7 +89,7 @@ void testdrawtext(char *text, uint16_t color)
 
 void send_img_via_serial(size_t size, uint8_t *buf)
 {
-  Serial.print("IMG\n");
+  Serial.print("\n\nIMG\n");
   Serial.write((uint8_t *)buf, size);
   Serial.print("\nEND\n");
 }
