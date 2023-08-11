@@ -1,13 +1,13 @@
 #include <cam.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library for ST7789
-#define GRAYSCALE
+// #define GRAYSCALE
 
 const static int CAM_CS = 7;
 const static int SHUTTLE_PIN = 8;
 
-#define IMG_WIDTH 40
-#define IMG_HEIGTH 40
+#define IMG_WIDTH 28
+#define IMG_HEIGTH 28
 
 #define TFT_RST 2
 #define TFT_DC 3
