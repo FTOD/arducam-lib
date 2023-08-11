@@ -57,10 +57,10 @@ while True:
 
     # save
     filename = "./gest" + str(img_num) + ".bmp"
-    filename = "/tmp/gest.bmp"
     if len(sys.argv) < 2:
-        print("no filename specified, using default: /tmp/gest.bmp")
+        print("no filename specified, using default: ./gest.bmp")
     else:
         filename = sys.argv[1]
     print("saving image to ", filename)
     image.save(filename)
+    img_num += 1
