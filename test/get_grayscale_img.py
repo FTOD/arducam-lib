@@ -8,8 +8,8 @@ img = bytes()
 
 
 # sizes
-height = 40 
-width = 40
+height = 28 
+width = 28
 
 img_num = 0
 while True:

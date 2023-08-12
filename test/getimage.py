@@ -4,16 +4,19 @@ from PIL import Image
 import sys
 
 ser = serial.Serial("/dev/ttyACM0",115200)
-img = bytes()
 
 
 # sizes
 height = 28
 width = 28
 
+# height = 40
+# width = 40
+
 img_num = 0
 
 while True:
+    img = bytes()
     while True:
         linein = ser.readline()
 
@@ -32,7 +35,7 @@ while True:
                 print("buffer data bigger than the image, delete the rest (usually useless)...")
                 img = img[:height*width*2]
             break
-        print(linein)
+        #print(linein)
 
 
     # Convert the byte array to a numpy array of uint16
@@ -58,7 +61,7 @@ while True:
     # save
     filename = "./gest" + str(img_num) + ".bmp"
     if len(sys.argv) < 2:
-        print("no filename specified, using default: ./gest.bmp")
+        print("no filename specified, using default")
     else:
         filename = sys.argv[1]
     print("saving image to ", filename)

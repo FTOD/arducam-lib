@@ -8,6 +8,8 @@ const static int SHUTTLE_PIN = 8;
 
 #define IMG_WIDTH 28
 #define IMG_HEIGTH 28
+// #define IMG_WIDTH 40
+// #define IMG_HEIGTH 40
 
 #define TFT_RST 2
 #define TFT_DC 3
@@ -51,8 +53,9 @@ void setup()
 void loop()
 {
   cam.flush_fifo();
-  delay(5);
+  delay(10);
   cam.start_capture();
+  delay(10);
   while (!cam.is_capture_done())
     ;
 // Serial.println("Capture done");
@@ -71,11 +74,14 @@ void loop()
 #endif
   digitalWrite(TFT_CS, HIGH); // Deselect the TFT.
   if (digitalRead(SHUTTLE_PIN) == LOW)
+  {
 #ifdef GRAYSCALE
     send_img_via_serial(IMG_WIDTH * IMG_HEIGTH, img_buf);
 #else
     send_img_via_serial(IMG_WIDTH * IMG_HEIGTH * 2, img_buf);
+    delay(100);
 #endif
+  }
   return;
 }
 
