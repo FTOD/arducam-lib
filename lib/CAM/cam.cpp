@@ -214,8 +214,6 @@ uint32_t Cam::read_fifo_length()
 uint8_t Cam::read_fifo_burst(size_t size, uint8_t *buf)
 {
     uint32_t len = read_fifo_length();
-    // DEBUG
-    // Serial.println("FOFO len = " + String(len));
     digitalWrite(CS, LOW);
     set_fifo_burst();
     uint8_t temp0, temp1;
@@ -236,25 +234,25 @@ uint8_t Cam::read_fifo_burst(size_t size, uint8_t *buf)
 uint8_t Cam::read_fifo_burst_grayscale(size_t size, uint8_t *buf)
 {
     uint32_t len = read_fifo_length();
-    // DEBUG
-    // Serial.println("FOFO len = " + String(len));
     digitalWrite(CS, LOW);
     set_fifo_burst();
-    uint8_t temp0, temp1;
+    uint16_t temp0, temp1;
     uint16_t pixel;
-    size_t i = 0;
-    while (len-- && i < size)
+    int i = 0;
+    while (len > 0 && i < size)
     {
-        temp1 = SPI.transfer(0x00);
+        temp1 = (uint16_t)SPI.transfer(0x00);
         delayMicroseconds(12);
-        temp0 = SPI.transfer(0x00);
+        temp0 = (uint16_t)SPI.transfer(0x00);
         pixel = (temp1 << 8) | temp0;
-        int16_t red = ((pixel & 0xF800) >> 11);
-        int16_t green = ((pixel & 0x07E0) >> 5);
-        int16_t blue = (pixel & 0x001F);
-        int8_t grayscale = (0.3 * (double)red) + (0.59 * (double)green) + (0.11 * (double)blue);
+        uint16_t red = ((pixel & 0xF800) >> 11) << 3;
+        uint16_t green = ((pixel & 0x07E0) >> 5) << 2;
+        uint16_t blue = ((pixel & 0x001F)) << 3;
+
+        double grayscale_f = ((0.298 * (double)red) + (0.5870 * (double)green) + (0.11 * (double)blue));
+        uint8_t grayscale = (uint8_t)grayscale_f;
         buf[i++] = grayscale;
-        len--;
+        len -= 2;
     }
     digitalWrite(CS, HIGH);
     return 0;

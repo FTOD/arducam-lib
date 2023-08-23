@@ -1,7 +1,7 @@
 #include <cam.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library for ST7789
-// #define GRAYSCALE
+#define GRAYSCALE
 
 const static int CAM_CS = 7;
 const static int SHUTTLE_PIN = 8;
@@ -77,6 +77,7 @@ void loop()
   {
 #ifdef GRAYSCALE
     send_img_via_serial(IMG_WIDTH * IMG_HEIGTH, img_buf);
+    delay(50);
 #else
     send_img_via_serial(IMG_WIDTH * IMG_HEIGTH * 2, img_buf);
     delay(100);

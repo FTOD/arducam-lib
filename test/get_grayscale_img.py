@@ -13,6 +13,7 @@ width = 28
 
 img_num = 0
 while True:
+    img = bytes()
     while True:
         linein = ser.readline()
 
